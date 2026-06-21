@@ -52,33 +52,13 @@ public class SimpleHttpServer {
             HttpResponse httpResponse;
 
             if (method.equals("GET") && path.equals("/")) {
-                httpResponse = new HttpResponse(
-                    200,
-                    "OK",
-                    "text/plain",
-                    "Welcome to the home page"
-                );
+                httpResponse = HttpResponse.ok("Welcome to the home page");
             } else if (method.equals("GET") && path.equals("/hello")) {
-                httpResponse = new HttpResponse(
-                    200,
-                    "OK",
-                    "text/plain",
-                    "Hello from Java"
-                );
+                httpResponse = HttpResponse.ok("Hello from Java");
             } else if (method.equals("GET") && path.equals("/html")) {
-                httpResponse = new HttpResponse(
-                    200,
-                    "OK",
-                    "text/plain",
-                    "<h1>Hello HTML</h1>"
-                );
+                httpResponse = HttpResponse.html("<h1>Hello HTML</h1>");
             } else {
-                httpResponse = new HttpResponse(
-                    404,
-                    "Not Found",
-                    "text/plain",
-                    "404 Not Found"
-                );
+                httpResponse = HttpResponse.notFound();
             }
 
             sendResponse(output, httpResponse);
