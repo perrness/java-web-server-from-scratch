@@ -1,21 +1,25 @@
 record HttpResponse(int statusCode, String statusText, String contentType, String body) {
+    private static HttpResponse text(int code, String status, String body) {
+        return new HttpResponse(code, status, "text/plain", body);
+    }
+
     static HttpResponse ok(String body) {
-        return new HttpResponse(200, "OK", "text/plain", body);
+        return text(200, "OK", body);
     }
 
     static HttpResponse noContent() {
-        return new HttpResponse(204, "No Content", "text/plain", "No Content");
+        return text(204, "No Content", "No Content");
+    }
+
+    static HttpResponse notFound() {
+        return text(404, "Not Found", "Not Found");
+    }
+
+    static HttpResponse methodNotAllowed() {
+        return text(405, "Method Not Allowed", "Method Not Allowed");
     }
 
     static HttpResponse html(String body) {
         return new HttpResponse(200, "OK", "text/html", body);
-    }
-
-    static HttpResponse notFound() {
-        return new HttpResponse(404, "Not Found", "text/plain", "Not Found");
-    }
-
-    static HttpResponse methodNotAllowed() {
-        return new HttpResponse(405, "Method Not Allowed", "text/plain", "Method Not Allowed");
     }
 }
