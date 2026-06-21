@@ -1,2 +1,2 @@
-record HttpResponse(int status, String contentType, String body) {
+record HttpResponse(int statusCode, String statusText, String contentType, String body) {
 }

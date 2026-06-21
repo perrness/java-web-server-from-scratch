@@ -42,22 +42,46 @@ public class SimpleHttpServer {
             OutputStream output = clientSocket.getOutputStream();
 
             if (httpRequest == null) {
-                sendResponse(output, 400, "Bad Request", "text/plain", "Bad Request");
+                sendResponse(output, new HttpResponse(400, "Bad Request", "text/plain", "Bad Request"));
                 return;
             }
 
             String method = httpRequest.method();
             String path = httpRequest.path();
 
+            HttpResponse httpResponse;
+
             if (method.equals("GET") && path.equals("/")) {
-                sendResponse(output, 200, "OK", "text/plain", "Welcome to the home page");
+                httpResponse = new HttpResponse(
+                    200,
+                    "OK",
+                    "text/plain",
+                    "Welcome to the home page"
+                );
             } else if (method.equals("GET") && path.equals("/hello")) {
-                sendResponse(output, 200, "OK", "text/plain", "Hello from Java");
+                httpResponse = new HttpResponse(
+                    200,
+                    "OK",
+                    "text/plain",
+                    "Hello from Java"
+                );
             } else if (method.equals("GET") && path.equals("/html")) {
-                sendResponse(output, 200, "OK", "text/html", "<h1>Hello HTML</h1>");
+                httpResponse = new HttpResponse(
+                    200,
+                    "OK",
+                    "text/plain",
+                    "<h1>Hello HTML</h1>"
+                );
             } else {
-                sendResponse(output, 404, "Not Found", "text/plain", "404 Not Found");
+                httpResponse = new HttpResponse(
+                    404,
+                    "Not Found",
+                    "text/plain",
+                    "404 Not Found"
+                );
             }
+
+            sendResponse(output, httpResponse);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -65,16 +89,13 @@ public class SimpleHttpServer {
 
     private static void sendResponse(
         OutputStream output, 
-        int statusCode, 
-        String statusText, 
-        String contentType, 
-        String body
+        HttpResponse httpResponse
     ) throws IOException {
-        byte[] bodyBytes = body.getBytes(StandardCharsets.UTF_8);
+        byte[] bodyBytes = httpResponse.body().getBytes(StandardCharsets.UTF_8);
 
         String headers = 
-                "HTTP/1.1 " + statusCode + statusText + "\r\n" +
-                "Content-Type: " + contentType + "; charset=UTF-8\r\n" +
+                "HTTP/1.1 " + httpResponse.statusCode() + httpResponse.statusText() + "\r\n" +
+                "Content-Type: " + httpResponse.contentType() + "; charset=UTF-8\r\n" +
                 "Content-Length: " + bodyBytes.length + "\r\n" +
                 "\r\n";
 
