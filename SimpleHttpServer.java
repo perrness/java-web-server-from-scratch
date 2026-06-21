@@ -11,10 +11,13 @@ import java.util.Map;
 import java.util.concurrent.Executors;
 
 public class SimpleHttpServer {
-    void main(String[] args) throws IOException, InterruptedException {
-        int port = 8080;
+    private int port;
 
-
+    public SimpleHttpServer(int port) {
+        this.port = port;
+    }
+    
+    public void run() throws IOException, InterruptedException {
         try(ServerSocket serverSocket = new ServerSocket(port)) {
             IO.println("Server running on http://localhost:" + port);
 
@@ -35,7 +38,7 @@ public class SimpleHttpServer {
         }
     }
 
-    private static void handleClient(Socket clientSocket) throws IOException, InterruptedException {
+    private void handleClient(Socket clientSocket) throws IOException, InterruptedException {
         IO.println("Handling on thread " + Thread.currentThread().getName());
         try (clientSocket) {
             HttpRequest httpRequest = parseRequest(clientSocket.getInputStream());
@@ -54,7 +57,7 @@ public class SimpleHttpServer {
         }
     }
 
-    private static HttpResponse route(HttpRequest httpRequest) {
+    private HttpResponse route(HttpRequest httpRequest) {
         String method = httpRequest.method();
         String path = httpRequest.path();
 
@@ -73,7 +76,7 @@ public class SimpleHttpServer {
         return HttpResponse.notFound();
     }
 
-    private static void sendResponse(
+    private void sendResponse(
         OutputStream output, 
         HttpResponse httpResponse
     ) throws IOException {
@@ -90,7 +93,7 @@ public class SimpleHttpServer {
         output.flush();
     }
 
-    private static HttpRequest parseRequest(InputStream inputStream) throws IOException {
+    private HttpRequest parseRequest(InputStream inputStream) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
 
         String requestLine = reader.readLine();
