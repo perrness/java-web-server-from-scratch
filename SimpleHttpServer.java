@@ -58,7 +58,19 @@ public class SimpleHttpServer {
     }
 
     private HttpResponse route(HttpRequest httpRequest) {
-        return switch (httpRequest.path()) {
+        return switch (httpRequest.method()) {
+            case "GET" -> routeGet(httpRequest.path());
+            case "POST" -> routePost(httpRequest);
+            default -> HttpResponse.methodNotAllowed();
+        };
+    }
+
+    private HttpResponse routePost(HttpRequest httpRequest) {
+        return HttpResponse.ok("OK");
+    }
+
+    private HttpResponse routeGet(String path) {
+        return switch (path) {
             case "/" -> HttpResponse.ok("Welcome to the home page");
             case "/hello" -> HttpResponse.ok("Hello from Java");
             case "/html" -> HttpResponse.html("<h1>Hello HTML</h1>");
