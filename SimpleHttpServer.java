@@ -58,22 +58,12 @@ public class SimpleHttpServer {
     }
 
     private HttpResponse route(HttpRequest httpRequest) {
-        String method = httpRequest.method();
-        String path = httpRequest.path();
-
-        if (method.equals("GET") && path.equals("/")) {
-            return HttpResponse.ok("Welcome to the home page");
-        } 
-
-        if (method.equals("GET") && path.equals("/hello")) {
-            return HttpResponse.ok("Hello from Java");
-        } 
-
-        if (method.equals("GET") && path.equals("/html")) {
-            return HttpResponse.html("<h1>Hello HTML</h1>");
-        }
-        
-        return HttpResponse.notFound();
+        return switch (httpRequest.path()) {
+            case "/" -> HttpResponse.ok("Welcome to the home page");
+            case "/hello" -> HttpResponse.ok("Hello from Java");
+            case "/html" -> HttpResponse.html("<h1>Hello HTML</h1>");
+            default -> HttpResponse.notFound();
+        };
     }
 
     private void sendResponse(
